@@ -1,0 +1,34 @@
+{
+  "questions": [
+    {
+      "id": "preference",
+      "type": "choice",
+      "question": "What type of wine do you prefer?",
+      "options": ["Red", "White", "Rosé", "Sparkling", "No preference"]
+    },
+    {
+      "id": "occasion",
+      "type": "choice",
+      "question": "What's the occasion?",
+      "options": ["Casual dinner", "Special celebration", "Gift", "Just for myself"]
+    },
+    {
+      "id": "taste",
+      "type": "choice",
+      "question": "What taste profile do you enjoy?",
+      "options": ["Sweet", "Dry", "Fruity", "Bold", "Not sure"]
+    },
+    {
+      "id": "budget",
+      "type": "choice",
+      "question": "What's your budget range?",
+      "options": ["Under $15", "$15-30", "$30-50", "Over $50"]
+    },
+    {
+      "id": "food",
+      "type": "choice",
+      "question": "What will you be eating with it?",
+      "options": ["Red meat", "White meat", "Seafood", "Pasta", "Dessert", "No food pairing"]
+    }
+  ]
+} 
