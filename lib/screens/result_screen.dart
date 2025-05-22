@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import '../models/wine_data.dart';
 
 class ResultScreen extends StatelessWidget {
   final String responseText;
@@ -7,9 +9,16 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WineResponse wineResponse;
+    try {
+      wineResponse = WineResponse.parseResponse(responseText);
+    } catch (e) {
+      wineResponse = WineResponse(wineItems: []);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Wine Recommendation'),
+        title: const Text('Your Wine Recommendations'),
         backgroundColor: Colors.deepPurple[100],
         centerTitle: true,
       ),
@@ -21,13 +30,13 @@ class ResultScreen extends StatelessWidget {
             colors: [Colors.deepPurple[50]!, Colors.white],
           ),
         ),
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             const Text(
-              'Based on your preferences:',
+              'Based on your preferences, we recommend:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -36,32 +45,12 @@ class ResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: SingleChildScrollView(
-                  child: Text(
-                    responseText,
-                    style: TextStyle(
-                      fontSize: 16,
-                      height: 1.5,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                ),
-              ),
+              child:
+                  wineResponse.wineItems.isEmpty
+                      ? _buildErrorView()
+                      : _buildWineList(wineResponse.wineItems),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -81,6 +70,101 @@ class ResultScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorView() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.red, size: 64),
+          const SizedBox(height: 16),
+          const Text(
+            'Error processing recommendations',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Raw response: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...',
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWineList(List<WineItem> wines) {
+    return ListView.builder(
+      itemCount: wines.length,
+      itemBuilder: (context, index) {
+        final wine = wines[index];
+        return Card(
+          margin: const EdgeInsets.only(bottom: 16),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  wine.name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
+                  ),
+                ),
+                const Divider(),
+                _buildInfoRow(Icons.location_on, 'Регион:', wine.region),
+                _buildInfoRow(Icons.business, 'Бренд:', wine.brand),
+                _buildInfoRow(Icons.wine_bar, 'Вкус:', wine.taste),
+                _buildInfoRow(
+                  Icons.restaurant,
+                  'Гастрономия:',
+                  wine.gastronomy,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20, color: Colors.deepPurple[300]),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: TextStyle(color: Colors.grey[800], fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

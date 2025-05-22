@@ -4,6 +4,7 @@ import '../../services/audio_service.dart';
 import '../../services/api_service.dart';
 import 'recording_event.dart';
 import 'recording_state.dart';
+import 'dart:convert';
 
 class RecordingBloc extends Bloc<RecordingEvent, RecordingState> {
   final AudioService _audioService = AudioService();
@@ -66,8 +67,13 @@ class RecordingBloc extends Bloc<RecordingEvent, RecordingState> {
     try {
       final status = await _apiService.checkJobStatus(event.jobId);
 
-      if (status.status == 'completed' && status.responseText != null) {
-        emit(RecordingComplete(status.responseText!));
+      if (status.status == 'completed') {
+        // Convert the result object to a JSON string to pass to the result screen
+        String jsonResponse = "";
+        if (status.result != null) {
+          jsonResponse = jsonEncode(status.result);
+        }
+        emit(RecordingComplete(jsonResponse));
       } else if (status.status == 'processing') {
         emit(RecordingProcessing(event.jobId, status.progress));
 

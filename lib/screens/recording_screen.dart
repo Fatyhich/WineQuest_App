@@ -106,6 +106,8 @@ class _RecordingScreenContent extends StatelessWidget {
     final recordingReady = state is RecordingStopped && state.audioFile != null;
 
     return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,

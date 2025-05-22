@@ -49,7 +49,14 @@ class JobStatus {
     );
   }
 
-  String? get responseText {
+  String get responseText {
+    if (result != null) {
+      return result.toString();
+    }
+    return "No result available";
+  }
+
+  dynamic get ragResponse {
     if (result != null && result!.containsKey('rag_response')) {
       return result!['rag_response'];
     }
