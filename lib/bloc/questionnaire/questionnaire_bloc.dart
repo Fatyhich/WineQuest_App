@@ -3,6 +3,7 @@ import 'dart:async';
 import '../../services/questionnaire_service.dart';
 import '../../services/api_service.dart';
 import '../../models/questionnaire.dart';
+import '../../models/question.dart';
 import 'questionnaire_event.dart';
 import 'questionnaire_state.dart';
 
@@ -41,15 +42,26 @@ class QuestionnaireBloc extends Bloc<QuestionnaireEvent, QuestionnaireState> {
     }
 
     try {
-      // Find the question and update its answer
-      for (var question in _questionnaire!.questions) {
-        if (question.id == event.questionId) {
-          question.answer = event.answer;
-          break;
-        }
-      }
+      // Create a new list of questions with the updated answer
+      List<Question> updatedQuestions =
+          _questionnaire!.questions.map((question) {
+            if (question.id == event.questionId) {
+              // Create a new question with the updated answer
+              return Question(
+                id: question.id,
+                type: question.type,
+                question: question.question,
+                options: question.options,
+                answer: event.answer,
+              );
+            }
+            return question;
+          }).toList();
 
-      // Emit the updated state
+      // Create a new questionnaire with the updated questions
+      _questionnaire = Questionnaire(questions: updatedQuestions);
+
+      // Emit the updated state with the new questionnaire
       emit(QuestionnaireLoaded(_questionnaire!));
     } catch (e) {
       emit(QuestionnaireError('Failed to answer question: $e'));

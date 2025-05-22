@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/recording/recording_bloc.dart';
 import '../bloc/recording/recording_event.dart';
@@ -105,99 +106,104 @@ class _RecordingScreenContent extends StatelessWidget {
     final isRecording = state is RecordingInProgress;
     final recordingReady = state is RecordingStopped && state.audioFile != null;
 
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.deepPurple[50]!, Colors.white],
+    return SafeArea(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.deepPurple[50]!, Colors.white],
+          ),
         ),
-      ),
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            isRecording
-                ? 'Recording in progress...'
-                : recordingReady
-                ? 'Recording completed!'
-                : 'Record your wine preferences',
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.deepPurple,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20),
-          Text(
-            isRecording
-                ? 'Tap the button when you\'re done'
-                : recordingReady
-                ? 'Tap submit to process your recording'
-                : 'Tap the microphone button to start recording your wine preferences and experience',
-            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 60),
-          if (isRecording) _buildRecordingIndicator(),
-          GestureDetector(
-            onTap: () {
-              if (isRecording) {
-                context.read<RecordingBloc>().add(StopRecording());
-              } else if (!recordingReady) {
-                context.read<RecordingBloc>().add(StartRecording());
-              }
-            },
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color:
-                    isRecording
-                        ? Colors.red
-                        : Colors.deepPurple.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(
-                  color: isRecording ? Colors.red : Colors.deepPurple,
-                  width: 2,
-                ),
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              isRecording
+                  ? 'Recording in progress...'
+                  : recordingReady
+                  ? 'Recording completed!'
+                  : 'Record your wine preferences',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
               ),
-              child: Icon(
-                isRecording ? Icons.stop : Icons.mic,
-                color: isRecording ? Colors.white : Colors.deepPurple,
-                size: 48,
-              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 40),
-          if (recordingReady)
-            ElevatedButton(
-              onPressed: () {
-                context.read<RecordingBloc>().add(
-                  SubmitRecording(state.audioFile!),
-                );
+            const SizedBox(height: 20),
+            Text(
+              isRecording
+                  ? 'Tap the button when you\'re done'
+                  : recordingReady
+                  ? 'Tap submit to process your recording'
+                  : 'Tap the microphone button to start recording your wine preferences and experience',
+              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 60),
+            if (isRecording) _buildRecordingIndicator(),
+            InkWell(
+              onTap: () {
+                HapticFeedback.mediumImpact();
+                if (isRecording) {
+                  context.read<RecordingBloc>().add(StopRecording());
+                } else if (!recordingReady) {
+                  context.read<RecordingBloc>().add(StartRecording());
+                }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+              borderRadius: BorderRadius.circular(50),
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color:
+                      isRecording
+                          ? Colors.red
+                          : Colors.deepPurple.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(
+                    color: isRecording ? Colors.red : Colors.deepPurple,
+                    width: 2,
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                child: Icon(
+                  isRecording ? Icons.stop : Icons.mic,
+                  color: isRecording ? Colors.white : Colors.deepPurple,
+                  size: 48,
                 ),
-              ),
-              child: const Text(
-                'Submit Recording',
-                style: TextStyle(fontSize: 18),
               ),
             ),
-        ],
+            const SizedBox(height: 40),
+            if (recordingReady)
+              ElevatedButton(
+                onPressed: () {
+                  HapticFeedback.mediumImpact();
+                  context.read<RecordingBloc>().add(
+                    SubmitRecording(state.audioFile!),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Submit Recording',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

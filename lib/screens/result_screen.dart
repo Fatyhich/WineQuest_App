@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:convert';
 import '../models/wine_data.dart';
 
@@ -22,53 +23,59 @@ class ResultScreen extends StatelessWidget {
         backgroundColor: Colors.deepPurple[100],
         centerTitle: true,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.deepPurple[50]!, Colors.white],
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.deepPurple[50]!, Colors.white],
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            const Text(
-              'Based on your preferences, we recommend:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepPurple,
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              const Text(
+                'Based on your preferences, we recommend:',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child:
-                  wineResponse.wineItems.isEmpty
-                      ? _buildErrorView()
-                      : _buildWineList(wineResponse.wineItems),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 16),
+              Expanded(
+                child:
+                    wineResponse.wineItems.isEmpty
+                        ? _buildErrorView()
+                        : _buildWineList(wineResponse.wineItems),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    HapticFeedback.mediumImpact();
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Start Over',
+                    style: TextStyle(fontSize: 18),
                   ),
                 ),
-                child: const Text('Start Over', style: TextStyle(fontSize: 18)),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -101,6 +108,7 @@ class ResultScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         final wine = wines[index];
         return Card(
+          key: ValueKey('wine_${index}'),
           margin: const EdgeInsets.only(bottom: 16),
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -133,6 +141,8 @@ class ResultScreen extends StatelessWidget {
           ),
         );
       },
+      physics: const AlwaysScrollableScrollPhysics(),
+      cacheExtent: 500.0,
     );
   }
 

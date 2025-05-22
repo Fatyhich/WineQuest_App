@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/questionnaire/questionnaire_bloc.dart';
 import '../bloc/questionnaire/questionnaire_event.dart';
@@ -115,63 +116,70 @@ class _QuestionnaireScreenContent extends StatelessWidget {
     // Check if all questions have been answered
     bool allAnswered = questionnaire.questions.every((q) => q.answer != null);
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.deepPurple[50]!, Colors.white],
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.deepPurple[50]!, Colors.white],
+          ),
         ),
-      ),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          const Text(
-            'Please answer the following questions:',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.deepPurple,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const Text(
+              'Please answer the following questions:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: ListView.builder(
-              itemCount: questionnaire.questions.length,
-              itemBuilder: (context, index) {
-                final question = questionnaire.questions[index];
-                return _buildQuestionItem(context, question, index);
-              },
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: questionnaire.questions.length,
+                itemBuilder: (context, index) {
+                  final question = questionnaire.questions[index];
+                  return _buildQuestionItem(context, question, index);
+                },
+                // Add caching for better performance
+                cacheExtent: 1000.0,
+                addAutomaticKeepAlives: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed:
-                  allAnswered
-                      ? () {
-                        context.read<QuestionnaireBloc>().add(
-                          SubmitQuestionnaire(),
-                        );
-                      }
-                      : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed:
+                    allAnswered
+                        ? () {
+                          HapticFeedback.mediumImpact();
+                          context.read<QuestionnaireBloc>().add(
+                            SubmitQuestionnaire(),
+                          );
+                        }
+                        : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  disabledBackgroundColor: Colors.grey[300],
                 ),
-                disabledBackgroundColor: Colors.grey[300],
-              ),
-              child: const Text(
-                'Submit Preferences',
-                style: TextStyle(fontSize: 18),
+                child: const Text(
+                  'Submit Preferences',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -182,6 +190,7 @@ class _QuestionnaireScreenContent extends StatelessWidget {
     int index,
   ) {
     return Card(
+      key: ValueKey('question_${question.id}'),
       margin: const EdgeInsets.symmetric(vertical: 8),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -211,44 +220,62 @@ class _QuestionnaireScreenContent extends StatelessWidget {
   ) {
     final isSelected = question.answer == option;
 
-    return GestureDetector(
-      onTap: () {
-        context.read<QuestionnaireBloc>().add(
-          AnswerQuestion(questionId: question.id, answer: option),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.deepPurple.withOpacity(0.1) : Colors.white,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          key: ValueKey('option_${question.id}_$option'),
+          onTap: () {
+            HapticFeedback.selectionClick();
+            context.read<QuestionnaireBloc>().add(
+              AnswerQuestion(questionId: question.id, answer: option),
+            );
+          },
+          splashColor: Colors.deepPurple.withOpacity(0.3),
+          highlightColor: Colors.deepPurple.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color:
-                isSelected ? Colors.deepPurple : Colors.grey.withOpacity(0.5),
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              isSelected
-                  ? Icons.radio_button_checked
-                  : Icons.radio_button_unchecked,
-              color: isSelected ? Colors.deepPurple : Colors.grey,
-              size: 20,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                option,
-                style: TextStyle(
-                  color: isSelected ? Colors.deepPurple : Colors.black87,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
+          child: Ink(
+            decoration: BoxDecoration(
+              color:
+                  isSelected
+                      ? Colors.deepPurple.withOpacity(0.1)
+                      : Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color:
+                    isSelected
+                        ? Colors.deepPurple
+                        : Colors.grey.withOpacity(0.5),
+                width: isSelected ? 2 : 1,
               ),
             ),
-          ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Icon(
+                    isSelected
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_unchecked,
+                    color: isSelected ? Colors.deepPurple : Colors.grey,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        color: isSelected ? Colors.deepPurple : Colors.black87,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

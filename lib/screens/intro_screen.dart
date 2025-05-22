@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/intro/intro_bloc.dart';
 import '../bloc/intro/intro_event.dart';
@@ -45,45 +46,53 @@ class _IntroScreenContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.deepPurple[50]!, Colors.white],
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.deepPurple[50]!, Colors.white],
+          ),
         ),
-      ),
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Do you have wine experience?',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.deepPurple,
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'Do you have wine experience?',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 60),
-          _buildOptionButton(
-            context,
-            'Yes',
-            Icons.check_circle_outline,
-            Colors.green,
-            () => context.read<IntroBloc>().add(IntroYesSelected()),
-          ),
-          const SizedBox(height: 20),
-          _buildOptionButton(
-            context,
-            'No',
-            Icons.help_outline,
-            Colors.deepPurple,
-            () => context.read<IntroBloc>().add(IntroNoSelected()),
-          ),
-        ],
+            const SizedBox(height: 60),
+            _buildOptionButton(
+              context,
+              'Yes',
+              Icons.check_circle_outline,
+              Colors.green,
+              () {
+                HapticFeedback.mediumImpact();
+                context.read<IntroBloc>().add(IntroYesSelected());
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildOptionButton(
+              context,
+              'No',
+              Icons.help_outline,
+              Colors.deepPurple,
+              () {
+                HapticFeedback.mediumImpact();
+                context.read<IntroBloc>().add(IntroNoSelected());
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
