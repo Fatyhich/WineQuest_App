@@ -27,7 +27,7 @@ class RecordingScreen extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Record Your Experience'),
+            title: const Text('Запишите ваш опыт'),
             backgroundColor: Colors.deepPurple[100],
             centerTitle: true,
           ),
@@ -52,7 +52,7 @@ class _RecordingScreenContent extends StatelessWidget {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(height: 16),
-                Text('Submitting recording...'),
+                Text('Отправка записи...'),
               ],
             ),
           );
@@ -66,8 +66,8 @@ class _RecordingScreenContent extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   state is RecordingProcessing && state.progress != null
-                      ? 'Processing: ${state.progress!.status}'
-                      : 'Processing your request...',
+                      ? 'Обработка: ${state.progress!.status}'
+                      : 'Обработка вашего запроса...',
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -81,7 +81,7 @@ class _RecordingScreenContent extends StatelessWidget {
                 const Icon(Icons.error_outline, color: Colors.red, size: 48),
                 const SizedBox(height: 16),
                 Text(
-                  'Error: ${state.message}',
+                  'Ошибка: ${state.message}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.red),
                 ),
@@ -90,7 +90,7 @@ class _RecordingScreenContent extends StatelessWidget {
                   onPressed: () {
                     context.read<RecordingBloc>().add(StartRecording());
                   },
-                  child: const Text('Try Again'),
+                  child: const Text('Попробовать снова'),
                 ),
               ],
             ),
@@ -123,10 +123,10 @@ class _RecordingScreenContent extends StatelessWidget {
           children: [
             Text(
               isRecording
-                  ? 'Recording in progress...'
+                  ? 'Идет запись...'
                   : recordingReady
-                  ? 'Recording completed!'
-                  : 'Record your wine preferences',
+                  ? 'Запись завершена!'
+                  : 'Запишите ваши винные предпочтения',
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -137,10 +137,10 @@ class _RecordingScreenContent extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               isRecording
-                  ? 'Tap the button when you\'re done'
+                  ? 'Нажмите кнопку, когда закончите'
                   : recordingReady
-                  ? 'Tap submit to process your recording'
-                  : 'Tap the microphone button to start recording your wine preferences and experience',
+                  ? 'Нажмите отправить для обработки записи'
+                  : 'Нажмите кнопку микрофона, чтобы начать запись ваших винных предпочтений и опыта',
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
               textAlign: TextAlign.center,
             ),
@@ -198,7 +198,7 @@ class _RecordingScreenContent extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  'Submit Recording',
+                  'Отправить запись',
                   style: TextStyle(fontSize: 18),
                 ),
               ),
@@ -224,7 +224,7 @@ class _RecordingScreenContent extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           const Text(
-            'Recording...',
+            'Запись...',
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
         ],

@@ -19,7 +19,7 @@ class ResultScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Wine Recommendations'),
+        title: const Text('Ваши рекомендации вин'),
         backgroundColor: Colors.deepPurple[100],
         centerTitle: true,
       ),
@@ -38,7 +38,7 @@ class ResultScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 16),
               const Text(
-                'Based on your preferences, we recommend:',
+                'На основе ваших предпочтений мы рекомендуем:',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class ResultScreen extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    'Start Over',
+                    'Начать заново',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
@@ -94,12 +94,12 @@ class ResultScreen extends StatelessWidget {
           const Icon(Icons.error_outline, color: Colors.red, size: 64),
           const SizedBox(height: 16),
           const Text(
-            'Error processing recommendations',
+            'Ошибка обработки рекомендаций',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
-            'Raw response: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...',
+            'Необработанный ответ: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...',
             style: TextStyle(color: Colors.grey[600], fontSize: 12),
           ),
         ],

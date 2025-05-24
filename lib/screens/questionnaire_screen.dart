@@ -28,7 +28,7 @@ class QuestionnaireScreen extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Wine Preferences'),
+            title: const Text('Винные предпочтения'),
             backgroundColor: Colors.deepPurple[100],
             centerTitle: true,
           ),
@@ -56,7 +56,7 @@ class _QuestionnaireScreenContent extends StatelessWidget {
                 const Icon(Icons.error_outline, color: Colors.red, size: 48),
                 const SizedBox(height: 16),
                 Text(
-                  'Error: ${state.message}',
+                  'Ошибка: ${state.message}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.red),
                 ),
@@ -65,7 +65,7 @@ class _QuestionnaireScreenContent extends StatelessWidget {
                   onPressed: () {
                     context.read<QuestionnaireBloc>().add(LoadQuestionnaire());
                   },
-                  child: const Text('Try Again'),
+                  child: const Text('Попробовать снова'),
                 ),
               ],
             ),
@@ -77,7 +77,7 @@ class _QuestionnaireScreenContent extends StatelessWidget {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(height: 16),
-                Text('Submitting your preferences...'),
+                Text('Отправка ваших предпочтений...'),
               ],
             ),
           );
@@ -91,8 +91,8 @@ class _QuestionnaireScreenContent extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   state is QuestionnaireProcessing && state.progress != null
-                      ? 'Processing: ${state.progress!.status}'
-                      : 'Processing your request...',
+                      ? 'Обработка: ${state.progress!.status}'
+                      : 'Обработка вашего запроса...',
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -102,7 +102,7 @@ class _QuestionnaireScreenContent extends StatelessWidget {
           return _buildQuestionnaireUI(context, state);
         }
 
-        return const Center(child: Text('Something went wrong'));
+        return const Center(child: Text('Что-то пошло не так'));
       },
     );
   }
@@ -129,7 +129,7 @@ class _QuestionnaireScreenContent extends StatelessWidget {
         child: Column(
           children: [
             const Text(
-              'Please answer the following questions:',
+              'Пожалуйста, ответьте на следующие вопросы:',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -173,7 +173,7 @@ class _QuestionnaireScreenContent extends StatelessWidget {
                   disabledBackgroundColor: Colors.grey[300],
                 ),
                 child: const Text(
-                  'Submit Preferences',
+                  'Отправить предпочтения',
                   style: TextStyle(fontSize: 18),
                 ),
               ),

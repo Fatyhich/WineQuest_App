@@ -61,7 +61,7 @@ class _IntroScreenContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'Do you have wine experience?',
+              'Есть ли у вас опыт с вином?',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -72,7 +72,7 @@ class _IntroScreenContent extends StatelessWidget {
             const SizedBox(height: 60),
             _buildOptionButton(
               context,
-              'Yes',
+              'Да',
               Icons.check_circle_outline,
               Colors.green,
               () {
@@ -83,7 +83,7 @@ class _IntroScreenContent extends StatelessWidget {
             const SizedBox(height: 20),
             _buildOptionButton(
               context,
-              'No',
+              'Нет',
               Icons.help_outline,
               Colors.deepPurple,
               () {
