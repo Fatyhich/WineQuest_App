@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import '../models/api_response.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.16.84.42:5000/api';
+  static const String baseUrl = 'http://45.135.164.50:8000/api';
   final Dio _dio = Dio();
 
   // Send audio recording to the server

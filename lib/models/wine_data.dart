@@ -6,6 +6,10 @@ class WineItem {
   final String brand;
   final String taste;
   final String gastronomy;
+  final String sugarContent;
+  final String country;
+  final String price;
+  final String color;
   final Map<String, dynamic> rawData;
 
   WineItem({
@@ -14,6 +18,10 @@ class WineItem {
     required this.brand,
     required this.taste,
     required this.gastronomy,
+    required this.sugarContent,
+    required this.country,
+    required this.price,
+    required this.color,
     required this.rawData,
   });
 
@@ -24,6 +32,10 @@ class WineItem {
       brand: json['Бренд'] ?? '',
       taste: json['Вкус'] ?? '',
       gastronomy: json['Гастрономия'] ?? '',
+      sugarContent: json['Содержание сахара'] ?? '',
+      country: json['Страна'] ?? '',
+      price: json['Цена'] ?? '',
+      color: json['Цвет'] ?? '',
       rawData: json,
     );
   }
@@ -143,6 +155,10 @@ class WineResponse {
           'Бренд',
           'Вкус',
           'Гастрономия',
+          'Содержание сахара',
+          'Страна',
+          'Цена',
+          'Цвет',
         ]) {
           String? value = _extractValueImproved(content, fieldName);
 
@@ -187,6 +203,10 @@ class WineResponse {
             'Бренд',
             'Вкус',
             'Гастрономия',
+            'Содержание сахара',
+            'Страна',
+            'Цена',
+            'Цвет',
           ]) {
             String? value = _extractValueImproved(objContent, fieldName);
 

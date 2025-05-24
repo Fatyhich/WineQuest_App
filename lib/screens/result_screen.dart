@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:convert';
 import '../models/wine_data.dart';
 
 class ResultScreen extends StatelessWidget {
@@ -128,9 +127,21 @@ class ResultScreen extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                _buildInfoRow(Icons.location_on, 'Регион:', wine.region),
                 _buildInfoRow(Icons.business, 'Бренд:', wine.brand),
+                if (wine.country.isNotEmpty)
+                  _buildInfoRow(Icons.flag, 'Страна:', wine.country),
+                _buildInfoRow(Icons.location_on, 'Регион:', wine.region),
+                if (wine.color.isNotEmpty)
+                  _buildInfoRow(Icons.palette, 'Цвет:', wine.color),
+                if (wine.sugarContent.isNotEmpty)
+                  _buildInfoRow(
+                    Icons.cake,
+                    'Содержание сахара:',
+                    wine.sugarContent,
+                  ),
                 _buildInfoRow(Icons.wine_bar, 'Вкус:', wine.taste),
+                if (wine.price.isNotEmpty)
+                  _buildInfoRow(Icons.monetization_on, 'Цена:', wine.price),
                 _buildInfoRow(
                   Icons.restaurant,
                   'Гастрономия:',
