@@ -17,11 +17,11 @@ class IntroScreen extends StatelessWidget {
       child: BlocListener<IntroBloc, IntroState>(
         listener: (context, state) {
           if (state is IntroNavigateToRecording) {
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const RecordingScreen()),
             );
           } else if (state is IntroNavigateToQuestionnaire) {
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => const QuestionnaireScreen(),
               ),

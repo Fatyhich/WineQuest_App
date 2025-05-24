@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/wine_data.dart';
+import 'intro_screen.dart';
 
 class ResultScreen extends StatelessWidget {
   final String responseText;
@@ -57,7 +58,12 @@ class ResultScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     HapticFeedback.mediumImpact();
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const IntroScreen(),
+                      ),
+                      (route) => false,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,
