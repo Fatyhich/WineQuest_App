@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/wine_data.dart';
-import 'intro_screen.dart';
+// import 'intro_screen.dart'; // Kept for future use
+import 'recording_screen.dart';
 
 class ResultScreen extends StatelessWidget {
   final String responseText;
@@ -60,7 +61,7 @@ class ResultScreen extends StatelessWidget {
                     HapticFeedback.mediumImpact();
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                        builder: (context) => const IntroScreen(),
+                        builder: (context) => const RecordingScreen(),
                       ),
                       (route) => false,
                     );

@@ -1,3 +1,6 @@
+// NOTE: This screen is currently not used in the app flow but kept for future use.
+// The app now starts directly from the recording screen.
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

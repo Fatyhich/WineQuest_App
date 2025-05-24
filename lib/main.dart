@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/intro_screen.dart';
+// import 'screens/intro_screen.dart'; // Kept for future use
+import 'screens/recording_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,7 @@ class WineQuestApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const IntroScreen(),
+      home: const RecordingScreen(),
     );
   }
 }
